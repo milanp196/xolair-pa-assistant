@@ -12,7 +12,21 @@ st.title("PA Assistant for Xolair Admins")
 uploaded_file = st.file_uploader("Upload a denial letter or fax (PDF or image)")
 if uploaded_file:
     st.write("File received:", uploaded_file.name)
-    st.success("This is where we’ll process the document.") 
+        import pdfplumber
+
+    # Extract text from PDF
+    with pdfplumber.open(uploaded_file) as pdf:
+        text = "\n".join([page.extract_text() or "" for page in pdf.pages])
+
+    st.markdown("### 🧾 Extracted Document Text")
+    st.text_area("Raw Text", text, height=250)
+
+    # Button to trigger GPT-4
+    if st.button("Analyze with AI"):
+        with st.spinner("Analyzing..."):
+            summary = summarize_prior_auth(text)
+        st.markdown("### 🧠 AI Summary & Next Steps")
+        st.write(summary)
 
 def summarize_prior_auth(text):
     prompt = f"""

@@ -1,33 +1,17 @@
 import openai
 from dotenv import load_dotenv
 import os
+import streamlit as st
+import pdfplumber
 
+# Load environment variables
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-import streamlit as st
-
+# App Title
 st.title("PA Assistant for Xolair Admins")
 
-uploaded_file = st.file_uploader("Upload a denial letter or fax (PDF or image)")
-if uploaded_file:
-    st.write("File received:", uploaded_file.name)
-        import pdfplumber
-
-    # Extract text from PDF
-    with pdfplumber.open(uploaded_file) as pdf:
-        text = "\n".join([page.extract_text() or "" for page in pdf.pages])
-
-    st.markdown("### 🧾 Extracted Document Text")
-    st.text_area("Raw Text", text, height=250)
-
-    # Button to trigger GPT-4
-    if st.button("Analyze with AI"):
-        with st.spinner("Analyzing..."):
-            summary = summarize_prior_auth(text)
-        st.markdown("### 🧠 AI Summary & Next Steps")
-        st.write(summary)
-
+# --- Summarization Function ---
 def summarize_prior_auth(text):
     prompt = f"""
 You are a medical admin assistant AI.
@@ -46,3 +30,23 @@ Here’s the document content:
         messages=[{"role": "user", "content": prompt}]
     )
     return response['choices'][0]['message']['content']
+
+# --- File Upload ---
+uploaded_file = st.file_uploader("Upload a denial letter or fax (PDF or image)")
+
+if uploaded_file:
+    st.write("📎 File received:", uploaded_file.name)
+
+    # Extract text using pdfplumber
+    with pdfplumber.open(uploaded_file) as pdf:
+        text = "\n".join([page.extract_text() or "" for page in pdf.pages])
+
+    st.markdown("### 🧾 Extracted Document Text")
+    st.text_area("Raw Text", text, height=250)
+
+    # --- Analyze with AI ---
+    if st.button("Analyze with AI"):
+        with st.spinner("Analyzing with GPT-4..."):
+            summary = summarize_prior_auth(text)
+        st.markdown("### 🧠 AI Summary & Next Steps")
+        st.write(summary)

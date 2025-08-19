@@ -1,0 +1,34 @@
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore Jupyter Notebook checkpoints (if any)
+.ipynb_checkpoints/
+
+# Ignore environment variable files
+.env
+.env.*
+
+# Ignore virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Ignore VSCode settings (if you're using VSCode)
+.vscode/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore logs
+*.log
+
+# Ignore Streamlit secrets file (if used)
+.streamlit/secrets.toml
+
+# Ignore build artifacts
+*.egg-info/
+dist/
+build/

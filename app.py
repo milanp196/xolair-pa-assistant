@@ -1,12 +1,9 @@
 import openai
-from dotenv import load_dotenv
-import os
 import streamlit as st
 import pdfplumber
 
-# Load environment variables
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Set your OpenAI API key securely
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # App Title
 st.title("PA Assistant for Xolair Admins")
